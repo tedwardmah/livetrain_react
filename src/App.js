@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import AppConfig from './config/AppConfig.js';
+// TODO: Make this AppConfig work
+// import AppConfig from './config/AppConfig.js';
 import NycMap from './components/NycMap.js';
 import './App.css';
-// TODO: Need to figure out how to get css from node_modules...this was copied from there
-import './styles/mapbox/style.css';
+import 'mapbox.js/theme/style.css';
 
 class App extends Component {
   constructor(props) {
@@ -21,7 +21,8 @@ class App extends Component {
 
   fetchTrainsData = (url) => {
     var self = this;
-    fetch(AppConfig.apiDomain + url)
+    // fetch(AppConfig.apiDomain + url)
+    fetch("https://michael-backend.cnevids.com/")
       .then(response => {
         return response.json();
       })

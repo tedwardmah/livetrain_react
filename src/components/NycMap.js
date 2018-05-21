@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+// TODO: Make this AppConfig work
+// import AppConfig from '../config/AppConfig.js';
 import Mapbox from 'mapbox.js';
 // import d3 from 'd3';
 
