@@ -1,28 +1,428 @@
-.App {
-  text-align: center;
+/***** clearfix *****/
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}
+
+/* end clearfix config */
+
+body {
+  margin: 0; 
+  padding: 0; 
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+}
+
+#map {
+  position:absolute;
+  top: 0; 
+  bottom:0; 
+  height: 100%;
+  width:100%;
+  z-index: 1; 
+}
+
+.mapbox-improve-map {
+  display: none;
+}
+
+.leaflet-top {
+  top: 80px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
+  background-color: black;
+  color: white;
+  vertical-align: middle;
+  height: 50px;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  padding-left: 50px;
+  padding-top: 10px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+  font-weight: 300;
+}
+
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.App-title span {
+  font-size: 0.5em;
+}
+
+/* Stops & Overlays */
+.stops {
+  fill: #eee;
+}
+
+.stopOverlays {
+  fill: none;
+}
+
+/* Routes (The Visible Stuff) */
+.routeGroup {
+  opacity: .5;
+}
+
+.routeOutline {
+  fill: none;
+  stroke: black;
+  stroke-linejoin: round;
+}
+
+.routePath {
+  fill: none;
+  stroke: #d6d6d6;
+  stroke-linejoin: round;
+}
+
+/* Rails (The Invisible Stuff) */ 
+.rails {
+  fill: none;
+}
+
+/* Trains */
+.trains {
+  cursor: pointer;
+}
+
+.route-1, .route-2, .route-3 {
+  fill: #EE352E;
+}
+
+.route-4, .route-5, .route-5X, .route-6, .route-6X {
+  fill: #00933C;
+}
+
+.route-GS, .route-S, .route-L {
+  fill: #A7A9AC;
+}
+
+/* Station Tooltip stuff */
+.tooltip-pads {
+  cursor: pointer;
+}
+
+#station-tooltip {
+  position: absolute;
+  min-width: 125px;
+  text-align: center;
+  height: auto;
+  padding: 10px;
+  color: white;
+  background-color: rgba(0, 0, 0, .75);
+  border-radius: 5px;
+  pointer-events:none;
+}
+
+#station-tooltip.hidden {
+  display: none;
+}
+
+#station-countdown {
+  position: absolute;
+  right: 0;
+  top: 100px;
+  background-color: rgba(0, 0, 0, .75);
+  color: white;
+  z-index: 1;
+  opacity: 0;
+}
+
+#station-countdown.hidden {
+  display: none;
+}
+
+#station-countdown-header {
+  background-color: rgb(0, 0, 0);
+  cursor: pointer;
+}
+
+.close-button {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  font-weight: bolder;
+  font-size: 2em;
+  line-height: 0;
+  top: 18px;
+  left: 22px;
+}
+
+#station-countdown-header h3 {
+  margin: 0;
+  padding: 10px 10px 10px 60px;
+  text-align: center;
+}
+
+/* Styles the container below the station name that holds the countdown trips */
+#countdown-info {
+  padding: 0 10px;
+  cursor: default;
+}
+
+#station-countdown h4 {
+  margin: 0;
+  margin-top: 10px;
+  text-align: left;
+  border-bottom: 1px solid white;
+  padding-bottom: 5px;
+  padding-left: 5px;
+}
+
+#station-countdown ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#station-countdown li {
+  padding: 0;
+  margin: 5px 0;
+  display: none;
+}
+
+.alert-icon {
+  background-color: white;
+  color: red;
+  font-weight: bolder;
+  display: inline-block;
+  width: 1.23em;
+  text-align: center;
+  border-radius: 1em;
+  font-size: 1.25em;
+  line-height: 1.25em;
+  height: 1.25em;
+  margin-right: 15px;
+}
+
+#countdown-info h3 a {
   color: white;
 }
 
-.App-title {
-  font-size: 1.5em;
+#northbound-countdown-trips li:first-child {
+  margin-top: 0;
 }
 
-.App-intro {
-  font-size: large;
+#southbound-countdown-trips li:first-child {
+  margin-top: 0;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+#northbound-countdown-trips li:nth-child(-n+6) {
+  display: list-item;
+}
+
+#southbound-countdown-trips li:nth-child(-n+6) {
+  display: list-item;
+}
+
+.countdown-train-icon {
+  display: inline-block;
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  margin: 0 10px;
+  line-height: 25px;
+  vertical-align: middle;
+}
+
+.icon-1, .icon-2, .icon-3 {
+  background-color: #EE352E;  
+  /*border: 1px solid white;*/
+}
+
+.icon-4, .icon-5, .icon-6, .icon-6X, .icon-5X {
+  background-color: #00933C;
+  /*border: 1px solid #00933C;*/
+}
+
+.icon-S {
+  background-color: #A7A9AC;
+}
+
+.icon-L {
+  background-color: #A7A9AC;
+}
+
+.destination {
+  display: inline-block;
+  width: 305px;
+  text-transform: capitalize;
+}
+
+.minutes-till-arrival {
+  float: right;
+}
+
+.min-till-arrival-header {
+  float: right;
+  padding-right: 5px;
+}
+
+.trainLabels {
+  pointer-events: none;
+  fill: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.invisible {
+  display: none;
+}
+
+/************** Train Info *************/
+
+th, td {
+  white-space: nowrap;
+}
+
+#train-info-container.hidden {
+  display: none;
+}
+
+#train-info-container {
+  /*width: 320px;*/
+  position: absolute;
+  left: 0;
+  top: 100px;
+  background-color: rgba(0, 0, 0, .75);
+  color: white;
+  z-index: 1;
+  opacity: 0;
+}
+
+#train-info-header {
+  background-color: rgb(0, 0, 0);
+  cursor: pointer;
+}
+
+#train-info-header h3 {
+  margin: 0;
+  margin-left: 20px;
+  padding: 10px 10px 10px 10px;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 25px;
+  font-size: .9em;
+}
+
+#train-info {
+  padding: 5px 10px;
+  overflow: scroll;
+  max-height: 400px;
+}
+
+.train-info-station-name {
+  text-transform: capitalize;
+  min-width: 220px;
+}
+
+.train-info-times {
+  text-align: right;
+}
+
+#train-direction {
+  margin: 0;
+  margin-left: 15px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#train-info-icon {
+  display: inline-block;
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  line-height: 25px;
+  vertical-align: middle;
+  margin-left: 25px;
+}
+
+#train-close-button {
+  top: 21px;
+}
+
+#train-stops-container table {
+  width: 100%;
+  font-size: .95em;
+}
+
+/*********** Line-controls ****************/
+
+#line-controls {
+  position: fixed;
+  bottom: 15px;
+  left: 50px;
+  width: 100%;
+  z-index: 2;
+  color: white;
+}
+
+#line-controls ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.line-selector {
+  float: left;
+  margin: 0;
+  padding: 10px 15px;
+  display: inline-block;
+  border-right: 1px solid white;
+  background-color: rgba(0,0,0,0.5);
+  line-height: 25px;
+  cursor: pointer;
+}
+
+.line-selector:last-child {
+  border-right: none;
+}
+
+.line-selector-icon {
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  line-height: 25px;
+  vertical-align: middle;
+  pointer-events: none;
+}
+
+.selected {
+  background-color: rgba(0,0,0,0.8);
+}
+
+/*  Plus/Minus Controls  */
+.leaflet-control-zoom, .leaflet-bar, .leaflet-control {
+  z-index: 5;
+  float: left;
+}
+
+.faded {
+  opacity: .3;
+}
+
+.endingTrip {
+  opacity: 0;
 }
