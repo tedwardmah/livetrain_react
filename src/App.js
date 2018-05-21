@@ -1,15 +1,51 @@
 import React, { Component } from 'react';
+import AppConfig from './config/AppConfig.js';
+import NycMap from './components/NycMap.js';
 import './App.css';
+// TODO: Need to figure out how to get css from node_modules...this was copied from there
+import './styles/mapbox/style.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      trainsData: [],
+      countingDown: false,
+      selectedRoutes: []
+    }
+  }
+
+  componentDidMount = () => {
+    this.fetchTrainsData('');
+  }  
+
+  fetchTrainsData = (url) => {
+    var self = this;
+    fetch(AppConfig.apiDomain + url)
+      .then(response => {
+        return response.json();
+      })
+      .then(newTrainsData => {
+        console.log(newTrainsData);
+        self.setState({
+          // trainsData: newTrainsData
+          trainsData: newTrainsData.concat()
+        });
+      })
+      .catch(function(err) {
+        console.log('No data found', err);
+      });
+  }  
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">LiveTrain NYC <span>...a vizualization of realtime MTA subway locations</span></h1>
         </header>
-        
-        <div id='map'></div>
+
+        <NycMap
+          trainsData={this.state.trainsData} />
 
         {/*<div id='station-countdown' class='hidden'>
           <div id='station-countdown-header'>
